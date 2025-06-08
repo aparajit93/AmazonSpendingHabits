@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
+import streamlit as st
+
 data = pd.read_csv('amazon-orders.csv')
 df = data.copy()
 #Drop some columns without any data
@@ -32,11 +34,23 @@ tax_rate = (total_tax/total_spend)*100
 total_shipping_spend = df['Shipping Charge'].sum()
 mean_shipping_spend = df['Shipping Charge'].mean()
 
-fig_total_spend = px.bar(df,x='Order Date',y='Total Charged')
-fig_total_spend.show()
+#fig_total_spend = px.bar(df,x='Order Date',y='Total Charged')
+#fig_total_spend.show()
 
-fig_total_tax = px.bar(df,x='Order Date',y='Tax Charged')
-fig_total_tax.show()
+#fig_total_tax = px.bar(df,x='Order Date',y='Tax Charged')
+#fig_total_tax.show()
 
-fig_carrier = px.histogram(df,x='Carrier Name & Tracking Number')
-fig_carrier.show()
+#fig_carrier = px.histogram(df,x='Carrier Name & Tracking Number')
+#fig_carrier.show()
+
+st.title('Amazon Spending Habits Dashboard')
+st.divider()
+st.markdown('*This dashboard uses a generated dataset and is not real purchases*')
+st.divider()
+st.header('Data')
+st.dataframe(df)
+st.header('Spending')
+spend_vars = ['Total Charged', 'Tax Charged']
+selection = st.radio(label='Transaction',options=spend_vars)
+fig_total_spend = px.bar(df,x='Order Date',y=selection)
+st.plotly_chart(fig_total_spend)
